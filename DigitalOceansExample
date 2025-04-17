@@ -22,4 +22,69 @@ SELECT COUNT(product_cost)
 FROM product_information 
 WHERE product_cost > 8.00;
 
+/*As a first scenario, calculate the total units currently available in inventory to understand how many products are remaining for in-store and online sales. 
+This query will also include the DESC statement to organize the data from the largest to smallest amount. 
+Typically RDBMSs will default to ascending order, but this example includes the DESC option which allows you to view the data in descending order:*/
+
+SELECT product_name, 
+total_inventory - (store_units + online_units) AS remaining_inventory 
+FROM product_information 
+ORDER BY(remaining_inventory) DESC;
+
+-- This query is useful because it calculates the remaining inventory, 
+-- which can help the tea shop owners make plans to purchase more orders if they’re running low on a product.
+
+-- For the next scenario, you’ll analyze and compare the amount of revenue from in-store and online sales:
+
+SELECT product_name, 
+(online_units * product_retail) AS o, 
+(store_units * product_retail) AS s 
+FROM product_information;
+
+-- Next, calculate the total revenue from in-store and online sales using the SUM function and several mathematical operators:
+
+SELECT SUM(online_units * product_retail) + SUM(store_units * product_retail) AS total_sales 
+FROM product_information;
+
+/*
+Performing these queries is important for two reasons. 
+The first reason is so that the tea shop owners can evaluate which items are best-sellers and prioritize those products when purchasing more in the future.
+Second, they can analyze how well the tea shop performed overall with products sales in-store and online.
+*/
+/*
+To calculate the profit margin for your individual products, subtract product_cost from product_retail for each row. 
+Then divide this value by the product retail to calculate the profit margin percentage:
+*/
+SELECT product_name, 
+(product_retail - product_cost) / product_retail AS profit_margin
+FROM product_information;
+
+/*Based on this output, you’ll learn that the product with the highest profit margin is the golden teaspoon at 60%, and the lowest is for the Chai, Jasmine, Matcha, and Oolong teas at 18%. 
+For the golden teaspoon, this means at a retail value of $5.00 with a profit margin of 60%, you create $3.00 in revenue.*/
+
+/*You could also use the aggregate function AVG to calculate the average profit margin for all of the tea shop’s products. 
+This average serves as a benchmark for the tea shop owners to then identify what products fall below that number and strategize how to improve:*/
+
+SELECT AVG((product_retail - product_cost) / product_retail) 
+AS avg_profit_margin 
+FROM product_information;
+
+-- From this calculation, you can conclude that the mean profit margin for products at this tea shop is 28%.
+
+/*With this new information, imagine that the tea shop owners want to increase the profit margin to 31% in the next quarter for any products that currently have a profit margin less than 27%. 
+In order to do this, you’ll subtract your target profit margin from 1 (1 - 0.31) and then divide each of the returned products’ costs by this value. 
+The result will be the new price that the product must sell for at retail to achieve a 31% profit margin:*/
+
+SELECT product_name, product_cost / (1 - 0.31) AS new_retail 
+FROM product_information 
+WHERE (product_retail - product_cost) / product_retail < 0.27;
+
+/*
+These results display the new retail prices necessary for under-performing products to achieve a 31% profit margin. 
+Data analysis such as this equips the tea shop owners with the ability to make decisive business decisions 
+about how to improve their revenue for the next quarter and understand what to aim for.
+*/
+
+-- https://www.digitalocean.com/community/tutorials/how-to-use-mathematical-expressions-in-sql
+
 
