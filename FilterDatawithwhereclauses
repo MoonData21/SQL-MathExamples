@@ -1,0 +1,108 @@
+-- Filtering Data with WHERE clauses
+
+SELECT columns_to_query
+FROM table_to_query
+WHERE search_condition;
+
+-- WHERE column_name OPERATOR value_expression
+
+SELECT name
+FROM golfers
+WHERE (2 + 2) = 4;
+
+/*
+This query includes a WHERE clause, but instead of specifying a column name it uses (2 + 2) as the first value expression and tests whether it’s equal to the second value expression, 4.
+Because (2 + 2) is always equal to 4, this search condition evaluates to “true” for every row. Consequently, every row gets returned in the result set:
+*/
+
+SELECT name, wins
+FROM golfers
+WHERE wins = 1;
+
+SELECT name
+FROM golfers
+WHERE name = 'George';
+
+-- <>: tests whether two values are not equal
+SELECT name, wins
+FROM golfers
+WHERE wins <> 1;
+
+-- <: tests whether the first value is less than the second
+SELECT name, wins
+FROM golfers
+WHERE wins < 1;
+
+-- >: tests whether the first value is greater than the second
+SELECT name, wins
+FROM golfers
+WHERE wins > 1;
+
+SELECT name, wins
+FROM golfers
+WHERE wins <= 1; -- less than or equal too
+
+SELECT name, wins
+FROM golfers
+WHERE wins >= 1; -- greater than or equal too
+
+-- Predicates that use the IS NULL operator test whether values in a given column are Null.
+-- If so, the predicate evaluates to “true” and the row is included in the result set:
+SELECT name, rounds_played
+FROM golfers
+WHERE rounds_played IS NULL;
+
+-- Range predicates use the BETWEEN operator to test whether the specified column values fall between two value expressions:
+SELECT name, best
+FROM golfers
+WHERE best BETWEEN 67 AND 73;
+
+-- Membership predicates use the IN operator to test whether a value is a member of a given set:
+SELECT name, best
+FROM golfers
+WHERE best IN (65, 67, 69, 71);
+
+-- Pattern matching predicates use the LIKE operator to test whether a value matches a string pattern that contains one or more wildcard characters, 
+-- also known as wildcards. SQL defines two wildcards, % and _
+-- _ an underscore represents a single unknown character
+SELECT name, rounds_played
+FROM golfers
+WHERE rounds_played LIKE '2_';
+
+-- %: a percentage sign represents zero or more unknown characters
+SELECT name, rounds_played
+FROM golfers
+WHERE name LIKE 'G%';
+
+-- Combining
+SELECT name, best, worst, average
+FROM golfers
+WHERE best < 70 AND worst < 96;
+
+SELECT name, best, worst, average
+FROM golfers
+WHERE best < 70 OR worst < 96;
+
+-- You can include as many predicates as you’d like in a single WHERE clause as long as you combine them with the correct syntax. 
+-- As your search conditions get more complex, though, it can become difficult to predict what data they will filter.
+SELECT name, average, worst, rounds_played
+FROM golfers 
+WHERE average < 85 OR worst < 95 AND rounds_played BETWEEN 19 AND 23;
+
+SELECT name, average, worst, rounds_played
+FROM golfers
+WHERE (average < 85 OR worst < 95) AND rounds_played BETWEEN 19 AND 23;
+
+-- name   | average | worst | rounds_played |
+-- +--------+---------+-------+---------------+
+-- | George |    84.6 |   103 |            22 |
+-- | Diane  |    78.8 |    92 |            23 |
+
+-- As this output indicates, by prioritizing sets of predicates and wrapping them in parentheses, 
+-- otherwise identical queries can return significantly different result sets.
+
+-- Although it isn’t always necessary to do so, it’s recommended that you always include parentheses when combining more than two predicates in a single search condition. 
+-- Doing so can help make queries more readable and easier to understand.
+
+-- https://www.digitalocean.com/community/tutorials/how-to-use-where-clauses-in-sql
+
