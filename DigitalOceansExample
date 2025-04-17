@@ -1,0 +1,25 @@
+-- Analyzing Data with Aggregate Functions
+
+SELECT SUM(total_inventory) FROM product_information;
+
+SELECT MAX(product_cost) AS cost_max 
+FROM product_information;
+
+SELECT MIN(product_retail) AS retail_min 
+FROM product_information;
+
+SELECT AVG(product_retail) AS retail_average, 
+AVG(product_cost) AS cost_average 
+FROM product_information;
+
+-- Use the COUNT function with the WHERE statement to query the number of products whose retail value is more than $8.00:
+SELECT COUNT(product_retail) 
+FROM product_information 
+WHERE product_retail > 8.00;
+
+-- Now query the number of products from product_cost that were purchased by the store for more than $8.00:
+SELECT COUNT(product_cost) 
+FROM product_information 
+WHERE product_cost > 8.00;
+
+
